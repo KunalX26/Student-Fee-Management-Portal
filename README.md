@@ -1,4 +1,6 @@
 Student Fee & Information Management System
+
+
 A web-based application built using Python Flask to manage student data, course registrations, and fee transactions. The system provides role-based access control for Administrators, Accountants, and Students to ensure secure and organized data management.
 
 🚀 Features
