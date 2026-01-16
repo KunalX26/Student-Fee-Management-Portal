@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Successful - Admin Portal</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Animations & Base Styles (Code 1 Theme) --- */
+        @keyframes slideInFromTop {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .dropdown-menu {
+            display: none;
+            animation: slideInFromTop 0.2s ease-out;
+        }
+
+        .dropdown.show .dropdown-menu {
+            display: block;
+        }
+
+        .mobile-menu {
+            animation: slideInFromLeft 0.3s ease-out;
+        }
+
+        .menu-overlay {
+            animation: fadeInScale 0.2s ease-out;
+        }
+
+        .hamburger {
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.open {
+            transform: rotate(90deg);
+        }
+
+        .animate-slide-in { animation: slideInFromTop 0.6s ease-out; }
+        .animate-fade-scale { animation: fadeInScale 0.5s ease-out; }
+
+        .profile-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .mobile-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-dropdown.open {
+            max-height: 500px;
+        }
+
+        .mobile-menu-item {
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-item:active {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 min-h-screen flex flex-col">
+
+    <nav class="bg-white nav-shadow sticky top-0 z-50 animate-slide-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg profile-gradient flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        A
+                    </div>
+                    <div class="hidden md:block">
+                        <h1 class="text-lg font-bold text-gray-800">Admin Portal</h1>
+                        <p class="text-xs text-gray-500">Management Dashboard</p>
+                    </div>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="admin_home" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        Home
+                    </a>
+
+                    <div class="relative dropdown">
+                        <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200 flex items-center gap-1" onclick="toggleDropdown('adminDropdown', event)">
+                            Admin
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="adminDropdown" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                            <a href="admin_profile" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors border-b border-gray-50">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">👤</span>
+                                    <span>Edit Profile</span>
+                                </div>
+                            </a>
+                            <a href="admin_reg" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors border-b border-gray-50">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">➕</span>
+                                    <span>Register Admin</span>
+                                </div>
+                            </a>
+                            <a href="show_admins" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">👥</span>
+                                    <span>All Administrators</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="relative dropdown">
+                        <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200 flex items-center gap-1" onclick="toggleDropdown('accountantDropdown', event)">
+                            Accountant
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="accountantDropdown" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                            <a href="accountant_reg" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors border-b border-gray-50">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">➕</span>
+                                    <span>Register Accountant</span>
+                                </div>
+                            </a>
+                            <a href="show_accountants" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">💼</span>
+                                    <span>Manage Accountants</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="relative dropdown">
+                        <button class="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg transition-all duration-200 flex items-center gap-1" onclick="toggleDropdown('studentDropdown', event)">
+                            Student
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="studentDropdown" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                            <a href="student_reg_admin" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors border-b border-gray-50">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">📝</span>
+                                    <span>Register Student</span>
+                                </div>
+                            </a>
+                            <a href="show_students_admin" class="block px-4 py-3 text-sm text-purple-600 bg-purple-50 hover:bg-purple-50 hover:text-purple-600 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg">📊</span>
+                                    <span>Student Data</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="show_transaction" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        Transactions
+                    </a>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">
+                            AD
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Administrator</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Logout
+                    </a>
+                </div>
+
+                <!-- Mobile Hamburger Menu (Mobile Only) -->
+                <button id="mobileMenuBtn" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-all duration-200 hamburger" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden fixed left-0 top-16 h-screen w-64 bg-white shadow-2xl z-40 lg:hidden overflow-y-auto mobile-menu">
+        <div class="p-4 space-y-2">
+            <!-- Home Link -->
+            <a href="admin_home" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                <div class="flex items-center gap-3">
+                    <span class="text-lg">🏠</span>
+                    <span class="font-medium">Home</span>
+                </div>
+            </a>
+
+            <!-- Admin Section -->
+            <div class="space-y-1">
+                <button onclick="toggleMobileDropdown('adminMobileDropdown')" class="w-full px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">👤</span>
+                        <span class="font-medium">Admin</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" id="adminMobileArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="adminMobileDropdown" class="mobile-dropdown">
+                    <a href="admin_profile" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Edit Profile
+                    </a>
+                    <a href="admin_reg" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Register Admin
+                    </a>
+                    <a href="show_admins" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        All Administrators
+                    </a>
+                </div>
+            </div>
+
+            <!-- Accountant Section -->
+            <div class="space-y-1">
+                <button onclick="toggleMobileDropdown('accountantMobileDropdown')" class="w-full px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">💼</span>
+                        <span class="font-medium">Accountant</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" id="accountantMobileArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="accountantMobileDropdown" class="mobile-dropdown">
+                    <a href="accountant_reg" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Register Accountant
+                    </a>
+                    <a href="show_accountants" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Manage Accountants
+                    </a>
+                </div>
+            </div>
+
+            <!-- Student Section -->
+            <div class="space-y-1">
+                <button onclick="toggleMobileDropdown('studentMobileDropdown')" class="w-full px-4 py-3 text-purple-600 bg-purple-50 rounded-lg transition-all duration-200 mobile-menu-item flex items-center justify-between font-medium">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">📚</span>
+                        <span>Student</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" id="studentMobileArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="studentMobileDropdown" class="mobile-dropdown">
+                    <a href="student_reg_admin" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Register Student
+                    </a>
+                    <a href="show_students_admin" class="block px-8 py-2 text-sm text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Student Data
+                    </a>
+                </div>
+            </div>
+
+            <!-- Transactions Link -->
+            <a href="show_transaction" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                <div class="flex items-center gap-3">
+                    <span class="text-lg">💳</span>
+                    <span class="font-medium">Transactions</span>
+                </div>
+            </a>
+
+            <!-- Divider -->
+            <div class="my-4 border-t border-gray-200"></div>
+
+            <!-- User Badge (Mobile) -->
+            <div class="px-4 py-3 bg-purple-50 rounded-lg flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">
+                    AD
+                </div>
+                <span class="text-sm font-medium text-gray-700">Administrator</span>
+            </div>
+
+            <!-- Logout Button (Mobile) -->
+            <a href="{{ url_for('logout') }}" class="block px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md text-center" onclick="closeMobileMenu()">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full animate-fade-scale">
+
+            <div class="bg-white rounded-2xl shadow-xl p-8 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-green-600"></div>
+
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-green-50 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Update Complete</h2>
+
+                <div class="mb-8">
+                    {% if msg %}
+                        <p class="text-gray-600">{{ msg }}</p>
+                    {% else %}
+                        <p class="text-gray-600">The student profile details have been successfully updated in the system.</p>
+                    {% endif %}
+                </div>
+
+                <a href="show_students_admin" class="inline-flex items-center justify-center w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold rounded-xl shadow-lg hover:from-purple-700 hover:to-purple-800 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Return to Student List
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-sm text-gray-600">
+                <p class="font-medium">Admin Portal • Confidential Information</p>
+                <p class="text-xs text-gray-500 mt-1">© 2025 All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            const dropdowns = document.querySelectorAll('.dropdown');
+            const targetDropdown = document.getElementById(id).parentElement;
+
+            dropdowns.forEach(dropdown => {
+                if (dropdown !== targetDropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            targetDropdown.classList.toggle('show');
+        }
+
+        window.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+                closeMobileMenu();
+            }
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+
+            mobileMenu.classList.toggle('hidden');
+            menuOverlay.classList.toggle('hidden');
+            hamburgerBtn.classList.toggle('open');
+        }
+
+        // Close Mobile Menu
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+
+            mobileMenu.classList.add('hidden');
+            menuOverlay.classList.add('hidden');
+            hamburgerBtn.classList.remove('open');
+        }
+
+        // Mobile Dropdown Toggle
+        function toggleMobileDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('MobileDropdown', 'MobileArrow'));
+
+            dropdown.classList.toggle('open');
+            arrow.style.transform = dropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    </script>
+</body>
+</html>

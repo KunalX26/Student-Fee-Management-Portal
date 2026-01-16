@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change Accountant Password</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+</head>
+<body>
+
+    <h2>Change Password (Accountant)</h2>
+
+    <!-- Display message from Flask -->
+    {% if msg %}
+        <p>{{ msg }}</p>
+    {% endif %}
+
+    <!-- Password change form -->
+    <form method="post" action="/change_pass_accountant">
+        <label for="T1">Old Password:</label><br>
+        <input type="password" id="T1" name="T1" required><br><br>
+
+        <label for="T2">New Password:</label><br>
+        <input type="password" id="T2" name="T2" required><br><br>
+
+        <input type="submit" value="Change Password">
+    </form>
+
+</body>
+</html>

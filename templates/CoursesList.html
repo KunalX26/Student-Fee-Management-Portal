@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Courses List</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --color-primary: #3b82f6;
+            --color-primary-dark: #2563eb;
+            --color-primary-light: #60a5fa;
+            --color-accent: #06b6d4;
+            --color-accent-dark: #0891b2;
+            --color-dark: #0f172a;
+            --color-darker: #020617;
+        }
+
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideInUpCard {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .animate-fadeInLeft {
+            animation: fadeInLeft 0.8s ease-out both;
+        }
+
+        .animate-fadeInRight {
+            animation: fadeInRight 0.8s ease-out both;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-slideInUpCard {
+            animation: slideInUpCard 0.8s ease-out both;
+        }
+
+        .animate-slideDown {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        /* Hamburger animation */
+        .hamburger {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 30px;
+            height: 24px;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glass morphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-light);
+        }
+
+        /* Mobile table scrollbar */
+        .scrollbar-thin::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 4px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.8);
+            border-radius: 4px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 1);
+        }
+
+        /* Table row animation */
+        .table-row {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .table-row.visible {
+            animation: fadeInUp 0.6s ease-out both;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen flex flex-col text-slate-100" style="font-family: 'Inter', sans-serif;">
+
+    <!-- Fixed Navbar -->
+    <nav class="fixed top-0 w-full glass-effect shadow-lg z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a class="text-white font-bold text-2xl tracking-tight" href="/" style="font-family: 'Poppins', sans-serif;">
+                <span class="gradient-text">Study</span><span class="text-white">Nest</span>
+            </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex gap-6 items-center">
+            <a href="/" class="text-slate-300 hover:text-white transition-colors duration-300">Home</a>
+            <a href="/courses" class="text-slate-300 hover:text-white transition-colors duration-300">Courses</a>
+            <a href="/login" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                Login
+            </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menuToggle" class="md:hidden text-white focus:outline-none hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-16 right-0 w-64 h-screen glass-effect shadow-xl md:hidden flex flex-col">
+            <div class="flex flex-col gap-2 p-6">
+                <a href="/" class="block px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300">
+                    Home
+                </a>
+                <a href="/courses" class="block px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300">
+                    Courses
+                </a>
+                <div class="border-t border-white/10 my-2"></div>
+                <a href="/login" class="block px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 text-center">
+                    Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="mobile-menu-overlay fixed inset-0 bg-black/50 md:hidden z-40"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 pt-20">
+
+        <!-- Page Header Section -->
+        <section class="relative py-16 px-6 overflow-hidden">
+            <!-- Background decorative elements -->
+            <div class="absolute top-10 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float"></div>
+            <div class="absolute bottom-10 right-10 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style="animation-delay: 1s;"></div>
+
+            <div class="container mx-auto max-w-7xl relative z-10">
+                <div class="text-center animate-fadeInUp">
+                    <div class="inline-block mb-4 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-semibold">
+                        📚 Explore Our Programs
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-bold mb-4 leading-tight" style="font-family: 'Poppins', sans-serif;">
+                        <span class="gradient-text">Courses Offered</span>
+                    </h1>
+                    <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+                        Choose from our comprehensive range of courses designed to elevate your skills and advance your career in technology.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Courses Table Section -->
+        <section class="container mx-auto px-6 py-8 max-w-7xl">
+            <div class="glass-effect rounded-2xl overflow-hidden shadow-2xl">
+                <!-- Mobile horizontal scroll container -->
+                <div class="overflow-x-auto md:overflow-x-visible scrollbar-thin">
+                    <table class="min-w-full w-[900px] md:w-full">
+                        <thead>
+                            <tr class="bg-gradient-to-r from-blue-600 to-cyan-600">
+                                <th class="py-4 px-6 text-left font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">Course Name</th>
+                                <th class="py-4 px-6 text-left font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">Duration</th>
+                                <th class="py-4 px-6 text-left font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">Level</th>
+                                <th class="py-4 px-6 text-left font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10">
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="0">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Web Development Fundamentals</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">3 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold border border-green-500/30">Beginner</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Learn HTML, CSS, and JavaScript to build responsive websites.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="100">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Python Programming</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">3 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold border border-green-500/30">Beginner</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Learn Python from scratch for programming and automation.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="200">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">UI/UX Design</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">4 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold border border-green-500/30">Beginner</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Learn visual design, prototyping, and usability testing.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="300">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Data Science &amp; Analytics</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">6 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-semibold border border-blue-500/30">Intermediate</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Learn data visualization, analysis, and machine learning.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="400">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Database Management (SQL &amp; NoSQL)</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">3 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-semibold border border-blue-500/30">Intermediate</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Learn how to design and manage databases.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="500">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Cloud Computing (AWS &amp; Azure)</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">5 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-semibold border border-blue-500/30">Intermediate</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Learn about cloud deployment and management using AWS and Azure.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="600">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Full Stack Development</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">8 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold border border-purple-500/30">Advanced</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Become proficient in front-end and back-end technologies.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="700">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Robotics Programming</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">6 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold border border-purple-500/30">Advanced</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Program and control robots using AI and mechanical systems.</td>
+                            </tr>
+                            <tr class="table-row hover:bg-white/5 transition-colors duration-300" data-delay="800">
+                                <td class="py-4 px-6 font-medium text-slate-200 whitespace-nowrap">Artificial Intelligence (AI)</td>
+                                <td class="py-4 px-6 text-slate-300 whitespace-nowrap">6 Months</td>
+                                <td class="py-4 px-6 whitespace-nowrap">
+                                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold border border-purple-500/30">Advanced</span>
+                                </td>
+                                <td class="py-4 px-6 text-slate-400">Dive into neural networks, NLP, and computer vision.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-effect border-t border-white/10 py-12 px-6 mt-20">
+        <div class="container mx-auto max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4" style="font-family: 'Poppins', sans-serif;">
+                        <span class="gradient-text">Study</span><span class="text-white">Nest</span>
+                    </h3>
+                    <p class="text-slate-400 mb-4 max-w-md">
+                        Your trusted portal for managing courses and fees efficiently. Supporting students, administrators, and accountants in their academic journey.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-slate-400 hover:text-blue-400 transition-colors">Home</a></li>
+                        <li><a href="/courses" class="text-slate-400 hover:text-blue-400 transition-colors">Courses</a></li>
+                        <li><a href="/login" class="text-slate-400 hover:text-blue-400 transition-colors">Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">Contact Us</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li>
+                            <a href="mailto:support@studynest.com" class="hover:text-blue-400 transition-colors">
+                                support@studynest.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+917339842169" class="hover:text-blue-400 transition-colors">
+                                +91-7339842169
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 text-center text-slate-400">
+                <p>&copy; 2025 StudyNest. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+
+        // Toggle menu on button click
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+        });
+
+        // Close menu when clicking overlay
+        mobileMenuOverlay.addEventListener('click', () => {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+        });
+
+        // Close menu when clicking a link
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+            });
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+            }
+        });
+
+        // Scroll animation observer
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Animate table rows with staggered delays
+            const tableRows = document.querySelectorAll('.table-row');
+            tableRows.forEach((row, index) => {
+                const delay = row.getAttribute('data-delay') || (index * 100);
+                setTimeout(() => {
+                    row.classList.add('visible');
+                }, parseInt(delay));
+            });
+        });
+    </script>
+
+</body>
+</html>

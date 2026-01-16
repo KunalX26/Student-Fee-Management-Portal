@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Home - Student Portal</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Animations & Base Styles --- */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-slide-in { animation: slideInFromTop 0.6s ease-out; }
+        .animate-fade-scale { animation: fadeInScale 0.5s ease-out; }
+
+        .profile-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ID Card Styles */
+        .id-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            color: #1f2937;
+            max-width: 650px;
+            width: 100%;
+        }
+
+        .id-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #10b981);
+        }
+
+        .id-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-weight: bold;
+            font-size: 1.25rem;
+            position: relative;
+            letter-spacing: 0.05em;
+        }
+
+        .id-card-header::after {
+            content: "🎓";
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.4rem;
+        }
+
+        .id-card-body {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .id-card-details {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .id-card-details p {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 0.5rem;
+        }
+
+        .id-card-details strong {
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        .id-card-details span {
+            color: #6b7280;
+            text-align: right;
+            margin-left: 0.75rem;
+        }
+
+        .id-card-footer {
+            background: #f1f5f9;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            border-top: 1px solid #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .barcode-placeholder {
+            height: 2rem;
+            width: 6rem;
+            background: linear-gradient(to right, #cbd5e1, #e2e8f0);
+            border: 1px solid #94a3b8;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 min-h-screen flex flex-col">
+
+    <!-- Modern Navigation -->
+    <nav class="bg-white nav-shadow sticky top-0 z-50 animate-slide-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg profile-gradient flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        ST
+                    </div>
+                    <div class="hidden md:block">
+                        <h1 class="text-lg font-bold text-gray-800">Student Portal</h1>
+                        <p class="text-xs text-gray-500">Learning Dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Center Navigation -->
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="student_home" class="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg transition-all duration-200">
+                        Home
+                    </a>
+
+
+                    <a href="{{ url_for('student_profile_student', id=data[0]) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        My Profiles
+                    </a>
+
+                    <a href="{{ url_for('change_pass_student', id=data[0]) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        Change Password
+                    </a>
+
+                </div>
+
+                <!-- Right Side -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">
+                            ST
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Student</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[80vh]">
+        <div class="max-w-md w-full">
+
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-scale">
+
+                <div class="profile-gradient p-6 relative">
+                    <div class="absolute inset-0 bg-black opacity-10"></div>
+                    <div class="relative flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center text-white shadow-lg">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white drop-shadow-lg">Change Password</h2>
+                            <p class="text-purple-100 text-sm">Secure your student account</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if msg %}
+                <div class="px-6 pt-6">
+                    <div class="p-3 rounded-lg bg-green-50 text-green-700 border border-green-200 text-center text-sm font-medium">
+                        {{ msg }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <form id="changePassForm" method="post" action="/change_pass_student" novalidate class="p-6 sm:p-8">
+
+                    <div class="mb-5">
+                        <label for="T1" class="block text-sm font-semibold text-gray-700 mb-2">Current Password</label>
+                        <div class="relative">
+                            <input type="password" id="T1" name="T1" required
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none pr-10 text-gray-900"
+                                placeholder="Enter current password">
+                            <button type="button" onclick="togglePassword('T1')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-purple-600 transition-colors">
+                                <svg id="icon-T1" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="T2" class="block text-sm font-semibold text-gray-700 mb-2">New Password</label>
+                        <div class="relative">
+                            <input type="password" id="T2" name="T2" required
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none pr-10 text-gray-900"
+                                placeholder="Enter new password">
+                            <button type="button" onclick="togglePassword('T2')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-purple-600 transition-colors">
+                                <svg id="icon-T2" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <label for="T3" class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                        <div class="relative">
+                            <input type="password" id="T3" name="T3" required
+                                class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none pr-10 text-gray-900"
+                                placeholder="Re-enter new password">
+                            <button type="button" onclick="togglePassword('T3')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-purple-600 transition-colors">
+                                <svg id="icon-T3" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            </button>
+                        </div>
+                        <p id="confirmError" class="text-red-500 text-xs mt-2 hidden font-medium flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Passwords do not match.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        <button type="submit" class="btn-primary w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold px-6 py-3 rounded-lg hover:from-purple-700 hover:to-purple-800 shadow-md transition-all">
+                            Update Password
+                        </button>
+                        <a href="admin_home" class="w-full bg-white border-2 border-gray-200 text-gray-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all text-center">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Desktop Dropdown Logic
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            const dropdowns = document.querySelectorAll('.dropdown');
+            const targetDropdown = document.getElementById(id).parentElement;
+
+            dropdowns.forEach(d => {
+                if (d !== targetDropdown) d.classList.remove('show');
+            });
+            targetDropdown.classList.toggle('show');
+        }
+
+        window.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+
+            mobileMenu.classList.toggle('hidden');
+            menuOverlay.classList.toggle('hidden');
+            hamburgerBtn.classList.toggle('open');
+        }
+
+        // Close Mobile Menu
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+
+            mobileMenu.classList.add('hidden');
+            menuOverlay.classList.add('hidden');
+            hamburgerBtn.classList.remove('open');
+        }
+
+        // Mobile Dropdown Toggle
+        function toggleMobileDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('MobileDropdown', 'MobileArrow'));
+
+            dropdown.classList.toggle('open');
+            arrow.style.transform = dropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Password Toggle Logic
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                // Eye Slash Icon
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />';
+            } else {
+                input.type = 'password';
+                // Eye Icon
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+            }
+        }
+
+        // Form Validation
+        document.getElementById('changePassForm').addEventListener('submit', function(event) {
+            const newPassword = document.getElementById('T2').value;
+            const confirmPassword = document.getElementById('T3').value;
+            const errorMsg = document.getElementById('confirmError');
+
+            if (newPassword !== confirmPassword) {
+                errorMsg.classList.remove('hidden');
+                event.preventDefault();
+            } else {
+                errorMsg.classList.add('hidden');
+            }
+        });
+
+        // Close mobile menu when pressing Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
+    </script>
+</body>
+</html>

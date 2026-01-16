@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Auth Error</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Full background with deep blue-gray gradient and blur circles */
+        .full-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(135deg, #1e293b 0%, #374151 60%, #64748b 100%);
+            overflow: hidden;
+        }
+        .full-background .blur-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.45;
+            mix-blend-mode: lighten;
+        }
+        .full-background .blur1 { width: 320px; height: 320px; top: 10%; left: 6%; background: #6366f1; }
+        .full-background .blur2 { width: 240px; height: 240px; top: 65%; left: 70%; background: #475569; }
+        .full-background .blur3 { width: 150px; height: 150px; top: 55%; left: 18%; background: #334155; }
+        .full-background .blur4 { width: 220px; height: 220px; top: 20%; left: 75%; background: #0ea5e9; }
+        /* Animation keyframes for main content */
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-slide-up {
+            animation: fadeSlideUp 0.8s ease-out forwards;
+        }
+        /* Dropdown hidden by default */
+        .dropdown { display: none; }
+        .dropdown.show { display: block; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen overflow-hidden font-sans relative">
+
+    <!-- Background -->
+    <div class="full-background">
+        <div class="blur-circle blur1"></div>
+        <div class="blur-circle blur2"></div>
+        <div class="blur-circle blur3"></div>
+        <div class="blur-circle blur4"></div>
+    </div>
+
+    <!-- Fixed Navbar -->
+    <nav class="fixed top-0 left-0 w-full bg-gray-800 text-white shadow-lg z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex space-x-8">
+                <a href="/" class="hover:bg-gray-700 px-4 py-2 rounded-md transition duration-300 font-medium">Home</a>
+                 <a href="login" class="hover:bg-gray-700 px-4 py-2 rounded-md transition duration-300 font-medium">Login</a>
+
+        </nav>
+
+    <!-- Main content -->
+    <main class="pt-24 px-6 flex flex-col items-center justify-center h-full animate-fade-slide-up" style="animation-delay: 0.3s;">
+        <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold text-red-600 mb-4">Authentication Error</h1>
+            <p class="text-gray-700">You do not have permission to access this page.</p>
+            <a href="login" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded transition duration-300">Go to Login</a>
+        </div>
+    </main>
+
+    <script>
+        function toggleDropdown(id) {
+            const dropdowns = document.querySelectorAll(".dropdown");
+            dropdowns.forEach((d) => d.classList.remove("show"));
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches("button")) {
+                const dropdowns = document.querySelectorAll(".dropdown");
+                dropdowns.forEach((d) => d.classList.remove("show"));
+            }
+        };
+    </script>
+
+</body>
+</html>

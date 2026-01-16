@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - MyPortal</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --color-primary: #3b82f6;
+            --color-primary-dark: #2563eb;
+            --color-primary-light: #60a5fa;
+            --color-accent: #06b6d4;
+            --color-accent-dark: #0891b2;
+            --color-dark: #0f172a;
+            --color-darker: #020617;
+        }
+
+        /* Custom animations */
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-fadeInLeft {
+            animation: fadeInLeft 0.8s ease-out both;
+        }
+
+        .animate-fadeInRight {
+            animation: fadeInRight 0.8s ease-out 0.2s both;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glass morphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-light);
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(10px, -10px);
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+            pointer-events: none;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            top: 72px;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        /* Prevent body scroll when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen flex flex-col text-slate-100 mt-16" style="font-family: 'Inter', sans-serif;">
+
+   <!-- Fixed Navbar -->
+    <nav class="fixed top-0 w-full glass-effect shadow-lg z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a class="text-white font-bold text-2xl tracking-tight" href="/" style="font-family: 'Poppins', sans-serif;">
+                <span class="gradient-text">Study</span><span class="text-white">Nest</span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-6 items-center">
+                <a href="/" class="text-slate-300 hover:text-white transition-colors duration-300">Home</a>
+                <a href="/courses" class="text-slate-300 hover:text-white transition-colors duration-300">Courses</a>
+                <a href="/login" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300">
+                    Login
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menuToggle" class="md:hidden text-white focus:outline-none hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenuOverlay" class="mobile-menu-overlay fixed inset-0 bg-black/50 md:hidden"></div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-16 right-0 w-64 h-screen glass-effect shadow-xl md:hidden flex flex-col">
+            <div class="flex flex-col gap-2 p-6">
+                <a href="/" class="block px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300">
+                    Home
+                </a>
+                <a href="/courses" class="block px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300">
+                    Courses
+                </a>
+                <div class="border-t border-white/10 my-2"></div>
+                <a href="/login" class="block px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 text-center">
+                    Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="flex-1 flex items-center justify-center p-6 md:p-16 relative overflow-hidden">
+        <!-- Background decorative elements -->
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float"></div>
+        <div class="absolute bottom-20 right-10 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style="animation-delay: 1s;"></div>
+
+        <div class="max-w-7xl w-full flex gap-16 items-center relative z-10">
+            <!-- Left Side Illustration -->
+            <div class="flex-1 hidden lg:flex justify-center animate-fadeInLeft">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-3xl blur-3xl"></div>
+                    <svg class="relative w-full max-w-md drop-shadow-2xl" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Laptop/Screen -->
+                        <rect x="60" y="80" width="180" height="120" fill="#1e293b" rx="8" stroke="#3b82f6" stroke-width="3"/>
+                        <rect x="70" y="90" width="160" height="90" fill="#0f172a" rx="4"/>
+                        <!-- Screen glow -->
+                        <rect x="75" y="95" width="150" height="80" fill="url(#screenGradient)" rx="2" opacity="0.8"/>
+                        <!-- Laptop base -->
+                        <path d="M40 200 L260 200 L240 220 L60 220 Z" fill="#334155"/>
+                        <!-- User icon on screen -->
+                        <circle cx="150" cy="125" r="15" fill="#3b82f6" opacity="0.9"/>
+                        <path d="M150 140 Q130 155 130 165 L170 165 Q170 155 150 140" fill="#3b82f6" opacity="0.9"/>
+                        <!-- Lock icon -->
+                        <rect x="140" y="155" width="20" height="15" fill="#06b6d4" rx="2"/>
+                        <path d="M145 155 L145 150 Q145 145 150 145 Q155 145 155 150 L155 155" stroke="#06b6d4" stroke-width="2" fill="none"/>
+                        <!-- Decorative elements -->
+                        <circle cx="250" cy="60" r="8" fill="#60a5fa" opacity="0.8" class="animate-float"/>
+                        <circle cx="40" cy="120" r="6" fill="#06b6d4" opacity="0.8" class="animate-float" style="animation-delay: 0.5s;"/>
+                        <circle cx="270" cy="180" r="5" fill="#3b82f6" opacity="0.8" class="animate-float" style="animation-delay: 1s;"/>
+                        <circle cx="50" cy="240" r="7" fill="#60a5fa" opacity="0.7" class="animate-float" style="animation-delay: 1.5s;"/>
+                        <!-- Gradient definition -->
+                        <defs>
+                            <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.4" />
+                                <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Right Side Login Box -->
+            <div class="flex-1 glass-effect rounded-2xl shadow-2xl p-8 md:p-12 max-w-lg w-full animate-fadeInRight">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center" style="font-family: 'Poppins', sans-serif;">
+                    <span class="gradient-text">Welcome Back</span>
+                </h1>
+                <p class="text-slate-400 text-center mb-8">Sign in to access your portal</p>
+
+                <!-- Access Restriction Message Box -->
+                <div class="bg-blue-500/10 border border-blue-500/30 text-blue-300 p-4 mb-8 rounded-lg backdrop-blur-sm" role="alert">
+                    <p class="font-semibold text-sm mb-1">🔒 Secure Access</p>
+                    <p class="text-xs text-slate-400">Administrator, Accountant, or Student credentials required</p>
+                </div>
+
+                {% if msg %}
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-4 mb-6 rounded-lg backdrop-blur-sm text-center">
+                    <p class="font-semibold text-sm">{{ msg }}</p>
+                </div>
+                {% endif %}
+
+                <form action="/login" method="post" class="flex flex-col gap-6">
+                    <div>
+                        <label for="email" class="block text-slate-300 font-semibold mb-2 text-sm">Email Address</label>
+                        <input
+                            type="email" name="T1" id="email" required
+                            class="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 text-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-slate-500"
+                            placeholder="you@example.com"
+                        />
+                    </div>
+                    <div>
+                        <label for="password" class="block text-slate-300 font-semibold mb-2 text-sm">Password</label>
+                        <div class="relative">
+                            <input
+                                type="password" name="T2" id="password" required
+                                class="w-full px-4 py-3 pr-12 bg-slate-900/50 border border-slate-700 text-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-slate-500"
+                                placeholder="Enter your password"
+                            />
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none"
+                                aria-label="Toggle password visibility"
+                            >
+                                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-[1.02] transition-all duration-300 mt-2"
+                    >
+                        Sign In
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-effect border-t border-white/10 py-12 px-6 mt-20">
+        <div class="container mx-auto max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4" style="font-family: 'Poppins', sans-serif;">
+                        <span class="gradient-text">Study</span><span class="text-white">Nest</span>
+                    </h3>
+                    <p class="text-slate-400 mb-4 max-w-md">
+                        Your trusted portal for managing courses and fees efficiently. Supporting students, administrators, and accountants in their academic journey.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-slate-400 hover:text-blue-400 transition-colors">Home</a></li>
+                        <li><a href="/courses" class="text-slate-400 hover:text-blue-400 transition-colors">Courses</a></li>
+                        <li><a href="/login" class="text-slate-400 hover:text-blue-400 transition-colors">Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">Contact Us</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li>
+                            <a href="mailto:support@studynest.com" class="hover:text-blue-400 transition-colors">
+                                support@studynest.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+917339842169" class="hover:text-blue-400 transition-colors">
+                                +91-7339842169
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 text-center text-slate-400">
+                <p>&copy; 2025 StudyNest. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const menuLinks = mobileMenu.querySelectorAll('a');
+
+        // Function to close menu
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        // Function to open menu
+        function openMenu() {
+            menuToggle.classList.add('active');
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            document.body.classList.add('menu-open');
+            menuToggle.setAttribute('aria-expanded', 'true');
+        }
+
+        // Toggle menu on button click
+        menuToggle.addEventListener('click', function() {
+            if (menuToggle.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when overlay is clicked
+        mobileMenuOverlay.addEventListener('click', closeMenu);
+
+        // Close menu when a menu link is clicked
+        menuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on window resize (when reaching desktop size)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                closeMenu();
+            }
+        });
+
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Toggle eye icon
+            if (type === 'password') {
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            } else {
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                `;
+            }
+        });
+    </script>
+
+</body>
+</html>

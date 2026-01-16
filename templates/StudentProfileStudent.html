@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile - Student Portal</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Animations & Base Styles --- */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-slide-in { animation: slideInFromTop 0.6s ease-out; }
+        .animate-fade-scale { animation: fadeInScale 0.5s ease-out; }
+
+        .profile-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Table Styling */
+        .data-table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .data-table thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 min-h-screen flex flex-col">
+
+    <!-- Modern Navigation -->
+    <nav class="bg-white nav-shadow sticky top-0 z-50 animate-slide-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg profile-gradient flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        ST
+                    </div>
+                    <div class="hidden md:block">
+                        <h1 class="text-lg font-bold text-gray-800">Student Portal</h1>
+                        <p class="text-xs text-gray-500">Learning Dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Center Navigation -->
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="student_home" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        Home
+                    </a>
+                    {% if data %}
+                    <a href="{{ url_for('student_profile_student', id=data[0]) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        My Profile
+                    </a>
+
+                    <a href="{{ url_for('change_pass_student', id=data[0]) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        Change Password
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Right Side -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">
+                            ST
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Student</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Back Button -->
+            <div class="mb-8 animate-slide-in">
+                <a href="student_home" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+
+            <!-- Enrolled Courses Section -->
+            <section class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 animate-fade-scale card-hover">
+                <div class="profile-gradient p-6 relative">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-lg backdrop-blur-sm">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Enrolled Courses</h2>
+                            <p class="text-purple-100 text-sm">View your course enrollment details</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    {% if result %}
+                        <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
+                            <table class="min-w-full table-auto data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Course ID</th>
+                                        <th class="text-left">Course Name</th>
+                                        <th class="text-left">Total Fees</th>
+                                        <th class="text-left">Amount Paid</th>
+                                        <th class="text-left">Outstanding Due</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for d in result %}
+                                    <tr>
+                                        <td class="text-sm text-gray-600 font-mono">{{ d[0] }}</td>
+                                        <td class="text-sm font-medium text-gray-900">{{ d[3] }}</td>
+                                        <td class="text-sm text-gray-700 font-medium">₹{{ d[4] }}</td>
+                                        <td class="text-sm text-green-600 font-bold">₹{{ d[5] }}</td>
+                                        <td class="text-sm {% if d[6] > 0 %}text-red-600 font-bold{% else %}text-gray-500{% endif %}">₹{{ d[6] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="text-lg text-gray-600 font-medium">No Courses Enrolled</p>
+                            <p class="text-sm text-gray-500 mt-1">You haven't enrolled in any courses yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <!-- Fee Summary Cards -->
+            {% if result %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-scale">
+                <div class="bg-white rounded-2xl shadow-xl p-8 text-center card-hover">
+                    <span class="text-gray-600 text-sm uppercase tracking-wider font-semibold mb-2 block">Total Fees</span>
+                    <span class="text-4xl font-extrabold text-purple-600">₹{{ total }}</span>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8 text-center card-hover">
+                    <span class="text-gray-600 text-sm uppercase tracking-wider font-semibold mb-2 block">Amount Paid</span>
+                    <span class="text-4xl font-extrabold text-green-600">₹{{ paid }}</span>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8 text-center card-hover">
+                    <span class="text-gray-600 text-sm uppercase tracking-wider font-semibold mb-2 block">Outstanding Due</span>
+                    <span class="text-4xl font-extrabold text-red-600">₹{{ total_due }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Transaction History Section -->
+            <section class="bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-scale card-hover">
+                <div class="bg-gradient-to-r from-cyan-500 to-teal-600 p-6 relative">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-lg backdrop-blur-sm">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8v8m0-8h.01M12 18H5a2 2 0 01-2-2V8a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-7"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Payment History</h2>
+                            <p class="text-cyan-100 text-sm">View all your payment transactions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    {% if deposit %}
+                        <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-200">
+                            <table class="min-w-full table-auto data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Transaction ID</th>
+                                        <th class="text-left">Course Name</th>
+                                        <th class="text-left">Amount</th>
+                                        <th class="text-left">Payment Date</th>
+                                        <th class="text-left">Payment Method</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for d in deposit %}
+                                    <tr>
+                                        <td class="text-sm text-gray-600 font-mono">{{ d[0] }}</td>
+                                        <td class="text-sm font-medium text-gray-900">{{ d[4] }}</td>
+                                        <td class="text-sm text-green-600 font-bold">+ ₹{{ d[5] }}</td>
+                                        <td class="text-sm text-gray-600">{{ d[6] }}</td>
+                                        <td class="text-sm">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                                                {% if d[7] == 'Cash' %}
+                                                    bg-blue-100 text-blue-700
+                                                {% elif d[7] == 'Credit' %}
+                                                    bg-orange-100 text-orange-700
+                                                {% elif d[7] == 'UPI' %}
+                                                    bg-indigo-100 text-indigo-700
+                                                {% else %}
+                                                    bg-gray-100 text-gray-700
+                                                {% endif %}
+                                            ">
+                                                {{ d[7] }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% elif msg %}
+                        <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-center font-medium">
+                            {{ msg }}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8v8m0-8h.01M12 18H5a2 2 0 01-2-2V8a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-7"></path>
+                            </svg>
+                            <p class="text-lg text-gray-600 font-medium">No Transactions Found</p>
+                            <p class="text-sm text-gray-500 mt-1">Payment history will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-sm text-gray-600">
+                <p class="font-medium">Student Portal • Confidential Information</p>
+                <p class="text-xs text-gray-500 mt-1">© 2025 All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

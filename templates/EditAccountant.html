@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Accountant</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Animations & Theme Styles --- */
+        @keyframes slideInFromTop {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-slide-in { animation: slideInFromTop 0.6s ease-out; }
+        .animate-fade-scale { animation: fadeInScale 0.5s ease-out; }
+
+        .dropdown-menu { display: none; animation: slideInFromTop 0.2s ease-out; }
+        .dropdown.show .dropdown-menu { display: block; }
+
+        .mobile-menu {
+            animation: slideInFromLeft 0.3s ease-out;
+        }
+
+        .menu-overlay {
+            animation: fadeInScale 0.2s ease-out;
+        }
+
+        .hamburger {
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.open {
+            transform: rotate(90deg);
+        }
+
+        .profile-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .nav-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .input-field {
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(102, 126, 234, 0.1);
+        }
+        .btn-primary:hover { transform: translateY(-1px); }
+
+        .mobile-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-dropdown.open {
+            max-height: 500px;
+        }
+
+        .mobile-menu-item {
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-item:active {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 min-h-screen">
+
+    <nav class="bg-white nav-shadow sticky top-0 z-50 animate-slide-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg profile-gradient flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        A
+                    </div>
+                    <div class="hidden md:block">
+                        <h1 class="text-lg font-bold text-gray-800">Admin Portal</h1>
+                        <p class="text-xs text-gray-500">Management Dashboard</p>
+                    </div>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="admin_home" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all">Home</a>
+
+                    <div class="relative dropdown">
+                        <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-1" onclick="toggleDropdown('adminDropdown', event)">
+                            Admin
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="adminDropdown" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                            <a href="admin_profile" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 border-b border-gray-50">Edit Profile</a>
+                            <a href="admin_reg" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 border-b border-gray-50">Register Admin</a>
+                            <a href="show_admins" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">All Administrators</a>
+                        </div>
+                    </div>
+
+                    <div class="relative dropdown">
+                        <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-1" onclick="toggleDropdown('accountantDropdown', event)">
+                            Accountant
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="accountantDropdown" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                            <a href="accountant_reg" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 border-b border-gray-50">Register Accountant</a>
+                            <a href="show_accountants" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">Manage Accountants</a>
+                        </div>
+                    </div>
+
+                    <div class="relative dropdown">
+                        <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-1" onclick="toggleDropdown('studentDropdown', event)">
+                            Student
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="studentDropdown" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                            <a href="student_reg_admin" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 border-b border-gray-50">Register Student</a>
+                            <a href="show_students_admin" class="block px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">Student Data</a>
+                        </div>
+                    </div>
+
+                    <a href="show_transaction" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all">Transactions</a>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">AD</div>
+                        <span class="text-sm font-medium text-gray-700">Administrator</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 shadow-md transition-all">Logout</a>
+                </div>
+
+                <!-- Mobile Hamburger Menu (Mobile Only) -->
+                <button id="mobileMenuBtn" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-all duration-200 hamburger" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden fixed left-0 top-16 h-screen w-64 bg-white shadow-2xl z-40 lg:hidden overflow-y-auto mobile-menu">
+        <div class="p-4 space-y-2">
+            <!-- Home Link -->
+            <a href="admin_home" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                <div class="flex items-center gap-3">
+                    <span class="text-lg">🏠</span>
+                    <span class="font-medium">Home</span>
+                </div>
+            </a>
+
+            <!-- Admin Section -->
+            <div class="space-y-1">
+                <button onclick="toggleMobileDropdown('adminMobileDropdown')" class="w-full px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">👤</span>
+                        <span class="font-medium">Admin</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" id="adminMobileArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="adminMobileDropdown" class="mobile-dropdown">
+                    <a href="admin_profile" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Edit Profile
+                    </a>
+                    <a href="admin_reg" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Register Admin
+                    </a>
+                    <a href="show_admins" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        All Administrators
+                    </a>
+                </div>
+            </div>
+
+            <!-- Accountant Section -->
+            <div class="space-y-1">
+                <button onclick="toggleMobileDropdown('accountantMobileDropdown')" class="w-full px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">💼</span>
+                        <span class="font-medium">Accountant</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" id="accountantMobileArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="accountantMobileDropdown" class="mobile-dropdown">
+                    <a href="accountant_reg" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Register Accountant
+                    </a>
+                    <a href="show_accountants" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Manage Accountants
+                    </a>
+                </div>
+            </div>
+
+            <!-- Student Section -->
+            <div class="space-y-1">
+                <button onclick="toggleMobileDropdown('studentMobileDropdown')" class="w-full px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">📚</span>
+                        <span class="font-medium">Student</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" id="studentMobileArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="studentMobileDropdown" class="mobile-dropdown">
+                    <a href="student_reg_admin" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Register Student
+                    </a>
+                    <a href="show_students_admin" class="block px-8 py-2 text-sm text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                        Student Data
+                    </a>
+                </div>
+            </div>
+
+            <!-- Transactions Link -->
+            <a href="show_transaction" class="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all duration-200 mobile-menu-item" onclick="closeMobileMenu()">
+                <div class="flex items-center gap-3">
+                    <span class="text-lg">💳</span>
+                    <span class="font-medium">Transactions</span>
+                </div>
+            </a>
+
+            <!-- Divider -->
+            <div class="my-4 border-t border-gray-200"></div>
+
+            <!-- User Badge (Mobile) -->
+            <div class="px-4 py-3 bg-purple-50 rounded-lg flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">
+                    AD
+                </div>
+                <span class="text-sm font-medium text-gray-700">Administrator</span>
+            </div>
+
+            <!-- Logout Button (Mobile) -->
+            <a href="{{ url_for('logout') }}" class="block px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md text-center" onclick="closeMobileMenu()">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[85vh]">
+        <div class="max-w-2xl w-full">
+
+            {% if vgt %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-scale">
+
+                <div class="profile-gradient p-6 relative">
+                    <div class="absolute inset-0 bg-black opacity-10"></div>
+                    <div class="relative flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center text-white shadow-lg">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white drop-shadow-lg">Edit Accountant</h2>
+                            <p class="text-purple-100 text-sm">Update profile details</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="editForm" method="post" action="edit_accountant1" novalidate class="p-6 sm:p-8">
+
+                    <div class="mb-5">
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="name" name="T1" value="{{ vgt.0 }}" required
+                            pattern="^[A-Za-z\s]+$" title="Name should contain only alphabets and spaces."
+                            class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-gray-900"
+                            placeholder="Enter full name">
+                        <small id="NameError" class="text-red-500 text-xs mt-1 block"></small>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="contact" class="block text-sm font-semibold text-gray-700 mb-2">Contact Number</label>
+                        <input type="tel" id="contact" name="T2" value="{{ vgt.1 }}" required
+                            pattern="^(?:\+91|91)?[6-9]\d{9}$" title="Enter a valid Indian mobile number"
+                            class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-gray-900"
+                            placeholder="10-digit mobile number">
+                        <small id="ContactError" class="text-red-500 text-xs mt-1 block"></small>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Email Address <span class="text-xs font-normal text-gray-500 ml-1">(Read Only)</span>
+                        </label>
+                        <input type="email" id="email" name="T3" value="{{ vgt.2 }}" readonly
+                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50 text-gray-500 rounded-lg cursor-not-allowed select-none">
+                    </div>
+
+                    <div class="mb-8">
+                        <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+                        <input type="text" id="address" name="T4" value="{{ vgt.3 }}" required
+                            class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-gray-900"
+                            placeholder="Residential address">
+                        <small id="addressError" class="text-red-500 text-xs mt-1 block"></small>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="btn-primary flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold px-6 py-3 rounded-lg hover:from-purple-700 hover:to-purple-800 shadow-md transition-all flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Save Changes
+                        </button>
+                        <a href="show_accountants" class="flex-1 bg-white border-2 border-gray-200 text-gray-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            {% elif msg %}
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center animate-fade-scale max-w-md mx-auto border border-gray-100">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-3">Action Complete</h2>
+                <p class="text-gray-600 mb-8">{{ msg }}</p>
+                <button onclick="location.href='show_accountants'" class="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-md">
+                    Back to Accountants
+                </button>
+            </div>
+
+            {% else %}
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center animate-fade-scale max-w-md mx-auto border border-gray-100">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800 mb-3">No Data Available</h2>
+                <p class="text-gray-500 mb-6">Unable to load the accountant information provided.</p>
+                <button onclick="location.href='show_accountants'" class="w-full px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all">
+                    Back to List
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Form Validation
+        document.getElementById('editForm')?.addEventListener('submit', function(event) {
+            const nameInput = document.getElementById('name');
+            const contactInput = document.getElementById('contact');
+            const addressInput = document.getElementById('address');
+            let valid = true;
+
+            // Clear previous errors
+            document.getElementById('NameError').textContent = '';
+            document.getElementById('ContactError').textContent = '';
+            document.getElementById('addressError').textContent = '';
+
+            // Validate Name
+            if (!nameInput.value.trim()) {
+                document.getElementById('NameError').textContent = 'Name cannot be empty.';
+                valid = false;
+            } else if (!/^[A-Za-z\s]+$/.test(nameInput.value.trim())) {
+                document.getElementById('NameError').textContent = 'Name can only contain alphabets and spaces.';
+                valid = false;
+            }
+
+            // Validate Contact
+            if (!contactInput.value.trim()) {
+                document.getElementById('ContactError').textContent = 'Contact number cannot be empty.';
+                valid = false;
+            } else if (!/^(?:\+91|91)?[6-9]\d{9}$/.test(contactInput.value.trim())) {
+                document.getElementById('ContactError').textContent = 'Enter a valid Indian mobile number.';
+                valid = false;
+            }
+
+            // Validate Address
+            if (!addressInput.value.trim()) {
+                document.getElementById('addressError').textContent = 'Address cannot be empty.';
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+
+        // Dropdown Logic
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            const dropdowns = document.querySelectorAll('.dropdown');
+            const targetDropdown = document.getElementById(id).parentElement;
+
+            dropdowns.forEach(d => {
+                if (d !== targetDropdown) d.classList.remove('show');
+            });
+            targetDropdown.classList.toggle('show');
+        }
+
+        window.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+
+            mobileMenu.classList.toggle('hidden');
+            menuOverlay.classList.toggle('hidden');
+            hamburgerBtn.classList.toggle('open');
+        }
+
+        // Close Mobile Menu
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+
+            mobileMenu.classList.add('hidden');
+            menuOverlay.classList.add('hidden');
+            hamburgerBtn.classList.remove('open');
+        }
+
+        // Mobile Dropdown Toggle
+        function toggleMobileDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('MobileDropdown', 'MobileArrow'));
+
+            dropdown.classList.toggle('open');
+            arrow.style.transform = dropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Close mobile menu when pressing Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
+    </script>
+</body>
+</html>

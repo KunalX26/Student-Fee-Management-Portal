@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Home - Student Portal</title>
+    <link rel="icon" type="image/x-icon" href="static/images/Logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- Animations & Base Styles --- */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-slide-in { animation: slideInFromTop 0.6s ease-out; }
+        .animate-fade-scale { animation: fadeInScale 0.5s ease-out; }
+
+        .profile-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ID Card Styles */
+        .id-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            color: #1f2937;
+            max-width: 650px;
+            width: 100%;
+        }
+
+        .id-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #10b981);
+        }
+
+        .id-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-weight: bold;
+            font-size: 1.25rem;
+            position: relative;
+            letter-spacing: 0.05em;
+        }
+
+        .id-card-header::after {
+            content: "🎓";
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.4rem;
+        }
+
+        .id-card-body {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .id-card-details {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .id-card-details p {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 0.5rem;
+        }
+
+        .id-card-details strong {
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        .id-card-details span {
+            color: #6b7280;
+            text-align: right;
+            margin-left: 0.75rem;
+        }
+
+        .id-card-footer {
+            background: #f1f5f9;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            border-top: 1px solid #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .barcode-placeholder {
+            height: 2rem;
+            width: 6rem;
+            background: linear-gradient(to right, #cbd5e1, #e2e8f0);
+            border: 1px solid #94a3b8;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 min-h-screen flex flex-col">
+
+    <!-- Modern Navigation -->
+    <nav class="bg-white nav-shadow sticky top-0 z-50 animate-slide-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg profile-gradient flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        ST
+                    </div>
+                    <div class="hidden md:block">
+                        <h1 class="text-lg font-bold text-gray-800">Student Portal</h1>
+                        <p class="text-xs text-gray-500">Learning Dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Center Navigation -->
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="student_home" class="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg transition-all duration-200">
+                        Home
+                    </a>
+                    {% if data %}
+                    <a href="{{ url_for('student_profile_student', id=data[0]) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        My Profile
+                    </a>
+
+                    <a href="{{ url_for('change_pass_student', id=data[0]) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                        Change Password
+                    </a>
+                    {% endif %}
+
+                </div>
+
+                <!-- Right Side -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+                        <div class="w-8 h-8 rounded-full profile-gradient flex items-center justify-center text-white text-xs font-bold">
+                            ST
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Student</span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        {% if data %}
+        <div class="animate-fade-scale">
+            <!-- Header Section -->
+            <div class="mb-6 text-center">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome Back, {{ data[1] }}! 👋</h1>
+                <p class="text-gray-600">Here's your official student identification card</p>
+            </div>
+
+            <!-- Student ID Card -->
+            <div class="id-card card-hover">
+                <div class="id-card-header">
+                    OFFICIAL STUDENT CARD
+                </div>
+
+                <div class="id-card-body">
+                    <!-- Student Details (Full Width) -->
+                    <div class="id-card-details">
+                        <p>
+                            <strong>ID Number:</strong>
+                            <span class="font-mono text-purple-700 font-semibold">STU-{{ (data[0]|string)[:3].upper() }}001</span>
+                        </p>
+                        <p>
+                            <strong>Full Name:</strong>
+                            <span>{{ data[1] }}</span>
+                        </p>
+                        <p>
+                            <strong>Gender:</strong>
+                            <span>{{ data[2] }}</span>
+                        </p>
+                        <p>
+                            <strong>Joining Date:</strong>
+                            <span>{{ data[3] }}</span>
+                        </p>
+                        <p>
+                            <strong>Father's Name:</strong>
+                            <span>{{ data[4] }}</span>
+                        </p>
+                        <p>
+                            <strong>Mother's Name:</strong>
+                            <span>{{ data[5] }}</span>
+                        </p>
+                        <p>
+                            <strong>Contact Number:</strong>
+                            <span>{{ data[6] }}</span>
+                        </p>
+                        <p>
+                            <strong>Email Address:</strong>
+                            <span class="text-sm break-all">{{ data[7] }}</span>
+                        </p>
+                        <p>
+                            <strong>Residential Address:</strong>
+                            <span class="text-sm text-right">{{ data[8] }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="id-card-footer">
+                    <div>
+                        <span class="block text-xs uppercase font-bold tracking-wider text-gray-700">Active Student</span>
+                        <span class="text-[10px] text-gray-500">© 2025 Institution</span>
+                    </div>
+                    <div class="barcode-placeholder">
+                        <svg class="w-full h-full" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="5" y="5" width="3" height="30" fill="#64748b"/>
+                            <rect x="12" y="5" width="2" height="30" fill="#64748b"/>
+                            <rect x="18" y="5" width="4" height="30" fill="#64748b"/>
+                            <rect x="26" y="5" width="2" height="30" fill="#64748b"/>
+                            <rect x="32" y="5" width="3" height="30" fill="#64748b"/>
+                            <rect x="39" y="5" width="2" height="30" fill="#64748b"/>
+                            <rect x="45" y="5" width="4" height="30" fill="#64748b"/>
+                            <rect x="53" y="5" width="2" height="30" fill="#64748b"/>
+                            <rect x="59" y="5" width="3" height="30" fill="#64748b"/>
+                            <rect x="66" y="5" width="3" height="30" fill="#64748b"/>
+                            <rect x="73" y="5" width="2" height="30" fill="#64748b"/>
+                            <rect x="79" y="5" width="4" height="30" fill="#64748b"/>
+                            <rect x="87" y="5" width="3" height="30" fill="#64748b"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                {% if data %}
+                <a href="{{ url_for('student_profile_student', id=data[0]) }}" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition duration-300 shadow-lg text-center">
+                    View Full Profile
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% elif msg %}
+        <!-- Error/Loading State -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md animate-fade-scale">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 mb-4">
+                <svg class="w-8 h-8 text-yellow-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Loading Student Data</h3>
+            <p class="text-gray-600 mb-6">{{ msg }}</p>
+            <a href="student_home" class="inline-block px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-medium rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-md">
+                Reload Page
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-sm text-gray-600">
+                <p class="font-medium">Student Portal • Confidential Information</p>
+                <p class="text-xs text-gray-500 mt-1">© 2025 All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
