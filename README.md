@@ -77,7 +77,9 @@ Install dependencies: Ensure you have Python installed, then run:
 
 Bash
 
+```
 pip install flask pymysql
+```
 Database Configuration:
 
 Import the SQL schema into your MySQL database.
@@ -88,10 +90,13 @@ Run the Application:
 
 Bash
 
+```
 python app.py
+```
 Access the App: Open your browser and navigate to: http://127.0.0.1:5000/
 
 📁 Project Structure
+```
 Plaintext
 
 ├── app.py              # Main Flask application logic
@@ -105,6 +110,7 @@ Plaintext
 │   ├── StudentHome.html
 │   └── ... (other templates)
 └── README.md
+```
 🛡️ Security
 Sessions: Uses Flask session for maintaining user state.
 
