@@ -849,6 +849,7 @@ def student_profile_accountant():
         usertype = session["usertype"]
         if usertype == "accountant":
             if request.method == "POST":
+                print(request.form)
                 email=request.form['H1']
                 cur = create_connection()
                 sql1="select * from studentdata where email='" + email + "'"

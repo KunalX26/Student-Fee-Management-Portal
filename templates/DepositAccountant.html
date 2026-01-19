@@ -154,6 +154,7 @@
             <!-- Form Content -->
             <div class="p-8">
                 <!-- Student Information Grid -->
+            <form method="post" action="deposit1" class="space-y-6" onsubmit="return validateForm(event)">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
                     <div>
                         <label for="txt2" class="block text-sm font-semibold text-gray-700 mb-2">Student ID:</label>
@@ -180,8 +181,7 @@
                     </div>
                 </div>
 
-                <!-- Deposit Form -->
-                <form method="post" action="deposit1" class="space-y-6" onsubmit="return validateForm(event)">
+
 
                     <!-- Amount Input -->
                     <div>
